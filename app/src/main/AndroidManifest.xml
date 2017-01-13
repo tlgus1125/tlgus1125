@@ -8,15 +8,30 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.MainActivity"
+            android:configChanges="orientation|keyboardHidden|locale|screenSize|fontScale|screenLayout"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.ViewActivity"
+            android:configChanges="orientation|keyboardHidden|locale|screenSize|fontScale|screenLayout"
+            android:screenOrientation="portrait"></activity>
+
+        <activity android:name=".ui.RecordActivity"
+            android:configChanges="orientation|keyboardHidden|locale|screenSize|fontScale|screenLayout"
+            android:screenOrientation="portrait"></activity>
+
     </application>
 
     <uses-sdk android:targetSdkVersion="23"></uses-sdk>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>

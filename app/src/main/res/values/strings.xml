@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">PedometerApp</string>
+    <string name="stepcount">걸음 수 </string>
+    <string name="cur_loaction">현재 위치</string>
 </resources>
