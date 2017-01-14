@@ -18,13 +18,23 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.ViewActivity"
+        <activity android:name=".ui.StepViewActivity"
             android:configChanges="orientation|keyboardHidden|locale|screenSize|fontScale|screenLayout"
             android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".ui.RecordActivity"
+        <activity android:name=".ui.StepRecordActivity"
             android:configChanges="orientation|keyboardHidden|locale|screenSize|fontScale|screenLayout"
             android:screenOrientation="portrait"></activity>
+
+        <activity android:name=".ui.SettingActivity"
+            android:configChanges="orientation|keyboardHidden|locale|screenSize|fontScale|screenLayout"
+            android:screenOrientation="portrait"></activity>
+
+        <service android:name=".service.SensorService" android:enabled="true">
+            <intent-filter>
+                <action android:name="app.manbo.Service"></action>
+            </intent-filter>
+        </service>
 
     </application>
 
