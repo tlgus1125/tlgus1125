@@ -1,7 +1,5 @@
 package com.tlgus1125.pedometerapp.ui;
 
-
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,7 +10,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tlgus1125.pedometerapp.R;
 import com.tlgus1125.pedometerapp.baseinfomation.StepCount;
@@ -25,27 +22,24 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-
 /**
  * Created by tlgus1125 on 2017-01-13.
  */
 public class StepViewActivity extends Activity {
     private Button mBtnSetting = null;
-    private static final int MSG_SETTING = 100;
 
     private MyLocation mLocation = null;
     private TextView mTvLocation = null;
 
-    private Button mServiceBtn;
-    private Intent mSensorServiceIntent;
-    private BroadcastReceiver mReceiver;
+    private Button mServiceBtn = null;
+    private Intent mSensorServiceIntent = null;
+    private BroadcastReceiver mReceiver = null;
     private boolean flag = true;
-    private TextView mStepCountText;
-    private String mServiceData;
-
+    private TextView mStepCountText = null;
+    private TextView mDistanceText = null;
+    private String mServiceData = null;
     //DB
     private DbOpenHelper mDbOpenHelper;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +61,7 @@ public class StepViewActivity extends Activity {
 
         mReceiver = new SensorReceiver();
         mStepCountText = (TextView) findViewById(R.id.stepCount);
+        mDistanceText = (TextView) findViewById(R.id.distance);
 
         mServiceBtn = (Button) findViewById(R.id.btn_start);
         if(mServiceBtn != null) {
@@ -95,6 +90,11 @@ public class StepViewActivity extends Activity {
                             updateDataBase();
                             mServiceData = "0";
                             mStepCountText.setText(mServiceData);
+
+                            double distance = getDistanceValue(mServiceData);
+                            String isMeter = distance < 1000 ? "m" : "Km";
+                            mDistanceText.setText(String.valueOf(distance) + isMeter);
+
                             StepCount.Step = 0;
 
                         } catch (Exception e) {
@@ -108,7 +108,7 @@ public class StepViewActivity extends Activity {
 
     public void startSetting(){
         Intent intent = new Intent(this, SettingActivity.class);
-        startActivityForResult(intent, MSG_SETTING);
+        startActivity(intent);
     }
 
     public void updateDataBase(){
@@ -120,12 +120,14 @@ public class StepViewActivity extends Activity {
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToNext();
                 String day = cursor.getString(cursor.getColumnIndex(DataBases.CreateDB.DAY));
-                String walkcount = cursor.getString(cursor.getColumnIndex(DataBases.CreateDB.WALKCOUNT));
+                String walkcount = cursor.getString(cursor.getColumnIndex(DataBases.CreateDB.STEPCOUNT));
                 String distance = cursor.getString(cursor.getColumnIndex(DataBases.CreateDB.DISTANCE));
+                double distanceValue = Double.parseDouble(String.format("%.2f",Double.parseDouble(distance) + Integer.parseInt(mServiceData) * SettingActivity.mStrideValue));
                 mDbOpenHelper.updateColumn(day, String.valueOf(Integer.parseInt(walkcount) + Integer.parseInt(mServiceData)),
-                        String.valueOf(Double.parseDouble(distance) + Integer.parseInt(mServiceData) * SettingActivity.mStrideValue));
+                        String.valueOf(distanceValue));
             } else {
-                mDbOpenHelper.insertColumn(cur_date, mServiceData, String.valueOf(Integer.parseInt(mServiceData) * SettingActivity.mStrideValue));
+                double distanceValue = Double.parseDouble(String.format("%.2f",Integer.parseInt(mServiceData) * SettingActivity.mStrideValue));
+                mDbOpenHelper.insertColumn(cur_date, mServiceData, String.valueOf(distanceValue));
             }
         }
     }
@@ -147,17 +149,18 @@ public class StepViewActivity extends Activity {
         mLocation.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == MSG_SETTING){
-
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     public String getCurrentDate(){
         SimpleDateFormat CurDate = new SimpleDateFormat("yyyy-MM-DD", Locale.KOREA);
         return CurDate.format(new Date());
+    }
+
+    public double getDistanceValue(String strCount){
+        int stepCount = Integer.parseInt(strCount);
+        double distance = SettingActivity.mStrideValue * stepCount;
+        if(distance >= 1000.0){
+            distance /= 1000;
+        }
+        return Double.parseDouble(String.format("%.1f", distance));
     }
 
     class SensorReceiver extends BroadcastReceiver {
@@ -169,7 +172,9 @@ public class StepViewActivity extends Activity {
             mServiceData = intent.getStringExtra("serviceData");
 
             mStepCountText.setText(mServiceData);
-
+            double distance = getDistanceValue(mServiceData);
+            String isMeter = distance < 1000 ? "m" : "Km";
+            mDistanceText.setText(String.valueOf(distance) + isMeter);
         }
     }
 }

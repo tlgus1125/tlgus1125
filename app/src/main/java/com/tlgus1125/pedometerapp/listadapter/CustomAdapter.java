@@ -57,7 +57,9 @@ public class CustomAdapter extends BaseAdapter{
 
         mHolder.day.setText(mList.get(position).day);
         mHolder.stepcount.setText(mList.get(position).stepcount);
-        mHolder.distance.setText(mList.get(position).distance);
+        String distance = mList.get(position).distance;
+        String isMeter = Double.parseDouble(distance) < 1000 ? "m" : "Km";
+        mHolder.distance.setText(distance + isMeter);
 
         return v;
     }

@@ -36,12 +36,7 @@ public class SettingActivity extends Activity{
     }
 
     public void finishActivity(){
-        Intent intent = new Intent();
-        if(mStride != null) {
-            intent.putExtra("STRIDE", mStride.getText().toString());
-            mStrideValue = Double.parseDouble(mStride.getText().toString());
-        }
-        setResult(RESULT_OK, intent);
+        mStrideValue = Double.parseDouble(mStride.getText().toString());
         finish();
     }
 }

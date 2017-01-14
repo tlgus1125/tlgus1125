@@ -65,7 +65,7 @@ public class DbOpenHelper {
     public long insertColumn(String day, String walkcount, String distance){
         ContentValues values = new ContentValues();
         values.put(DataBases.CreateDB.DAY, day);
-        values.put(DataBases.CreateDB.WALKCOUNT, walkcount);
+        values.put(DataBases.CreateDB.STEPCOUNT, walkcount);
         values.put(DataBases.CreateDB.DISTANCE, distance);
         return mDB.insert(DataBases.CreateDB._TABLENAME, null, values);
     }
@@ -73,7 +73,7 @@ public class DbOpenHelper {
     public boolean updateColumn(String day, String walkcount, String distance){
         ContentValues values = new ContentValues();
         values.put(DataBases.CreateDB.DAY, day);
-        values.put(DataBases.CreateDB.WALKCOUNT, walkcount);
+        values.put(DataBases.CreateDB.STEPCOUNT, walkcount);
         values.put(DataBases.CreateDB.DISTANCE, distance);
         return mDB.update(DataBases.CreateDB._TABLENAME, values, DataBases.CreateDB.DAY + "='" + day + "'", null) > 0;
     }

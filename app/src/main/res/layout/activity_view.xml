@@ -11,13 +11,12 @@
         android:layout_marginTop="@dimen/margin"
         android:layout_gravity="center"
         >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/stepcount"
-            android:textSize="@dimen/text_size"
-            />
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/step"
+            android:layout_marginRight="@dimen/margin"
+            android:background="@android:color/transparent"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

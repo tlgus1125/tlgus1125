@@ -7,6 +7,7 @@ import android.widget.ListView;
 
 import com.tlgus1125.pedometerapp.R;
 import com.tlgus1125.pedometerapp.baseinfomation.StepInfo;
+import com.tlgus1125.pedometerapp.database.DataBases;
 import com.tlgus1125.pedometerapp.database.DbOpenHelper;
 import com.tlgus1125.pedometerapp.listadapter.CustomAdapter;
 
@@ -17,10 +18,10 @@ import java.util.ArrayList;
  */
 public class StepRecordActivity extends Activity{
 
-    private ArrayList<StepInfo> mList;
-    private CustomAdapter mAdapter;
-    private ListView mListView;
-    private StepInfo mWalkInfo;
+    private ArrayList<StepInfo> mList = null;
+    private CustomAdapter mAdapter = null;
+    private ListView mListView = null;
+    private StepInfo mWalkInfo = null;
 
     //DataBases
     private DbOpenHelper mDbOpenHelper;
@@ -53,9 +54,9 @@ public class StepRecordActivity extends Activity{
             while (mCursor.moveToNext()) {
 
                 mWalkInfo = new StepInfo(
-                        mCursor.getString(mCursor.getColumnIndex("day")),
-                        mCursor.getString(mCursor.getColumnIndex("walkcount")),
-                        mCursor.getString(mCursor.getColumnIndex("distance"))
+                        mCursor.getString(mCursor.getColumnIndex(DataBases.CreateDB.DAY)),
+                        mCursor.getString(mCursor.getColumnIndex(DataBases.CreateDB.STEPCOUNT)),
+                        mCursor.getString(mCursor.getColumnIndex(DataBases.CreateDB.DISTANCE))
                 );
 
                 mList.add(mWalkInfo);
