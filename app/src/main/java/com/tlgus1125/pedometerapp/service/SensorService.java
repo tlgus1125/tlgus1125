@@ -1,5 +1,6 @@
 package com.tlgus1125.pedometerapp.service;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -50,19 +51,18 @@ public class SensorService extends Service implements SensorEventListener{
     public void onCreate() {
         // TODO Auto-generated method stub
         super.onCreate();
-        Log.i("MyServiceIntent", "Service is Create");
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         accelerormeterSensor = sensorManager
                 .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
+        startForeground(1, new Notification());
     }
 
     @Override
     public void onStart(Intent intent, int startId) {
         // TODO Auto-generated method stub
         super.onStart(intent, startId);
-        Log.i("MyServiceIntent", "Service is started");
 
         if (accelerormeterSensor != null)
             sensorManager.registerListener(this, accelerormeterSensor,
@@ -73,7 +73,6 @@ public class SensorService extends Service implements SensorEventListener{
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        Log.i("MyServiceIntent", "Service is destroy");
 
         if (sensorManager != null)
             sensorManager.unregisterListener(this);
@@ -83,7 +82,6 @@ public class SensorService extends Service implements SensorEventListener{
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // TODO Auto-generated method stub
-
     }
 
     @Override

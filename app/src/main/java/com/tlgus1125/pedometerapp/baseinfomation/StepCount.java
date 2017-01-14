@@ -6,4 +6,6 @@ package com.tlgus1125.pedometerapp.baseinfomation;
 
 public class StepCount {
     public static int Step = 0;
+    public static double Distance = 0;
+    public static double StrideValue = 0.6;
 }

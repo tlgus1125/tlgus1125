@@ -1,42 +1,62 @@
 package com.tlgus1125.pedometerapp.location;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.widget.TextView;
+
 /**
  * Created by tlgus1125 on 2017-01-13.
  */
 
 public class MyLocation {
 
-    private static final int MY_PERMISSION_REQUEST = 100;
-
     private NaverMapAPI mNaverMapAPIAPI = null;
     private LocationManager mLocationManager = null;
     private LocationListener mLocationListener = null;
 
-    private Context context = null;
-
     private String m_strLocation = null;
     private TextView mTextView = null;
+    private Context context = null;
 
-    public void initMyLocation(Context context, Activity activity, TextView tv){
+    private Handler mHandler = null;
+
+    public static MyLocation mInstance = null;
+    public static MyLocation getInstance(){
+        if(mInstance == null)
+            mInstance = new MyLocation();
+        return mInstance;
+    }
+
+    public void initMyLocation(Context context) {
         this.context = context;
-        this.mTextView = tv;
         mNaverMapAPIAPI = new NaverMapAPI();
+        initLocationManager();
+    }
+
+    public void setRequestLocation() {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+    }
+
+    public void initLocationManager(){
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(final Location location) {
 
-                if(location != null)
+                if (location != null)
                     setLocation(location.getLatitude(), location.getLongitude());
             }
 
@@ -55,39 +75,6 @@ public class MyLocation {
 
             }
         };
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                activity.requestPermissions(new String[]{
-                                Manifest.permission.ACCESS_FINE_LOCATION,
-                                Manifest.permission.ACCESS_COARSE_LOCATION},
-                        MY_PERMISSION_REQUEST);
-            } else {
-                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
-                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
-            }
-        } else {
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
-        }
-    }
-
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            switch (requestCode) {
-                case MyLocation.MY_PERMISSION_REQUEST:
-                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                        if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                                context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-                            return;
-                        }
-                        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
-                        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
-                    }
-            }
-        }
     }
 
     public void setLocation(final double latitude, final double longitude){
@@ -96,13 +83,17 @@ public class MyLocation {
             @Override
             public void run() {
                 m_strLocation = mNaverMapAPIAPI.getLocation(latitude, longitude);
-                mTextView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mTextView.setText(m_strLocation);
-                    }
-                });
+                if(mHandler != null) {
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = 0;
+                    msg.obj = m_strLocation;
+                    mHandler.sendMessage(msg);
+                }
             }
         }).start();
+    }
+
+    public void setHandler(Handler handler){
+        mHandler = handler;
     }
 }

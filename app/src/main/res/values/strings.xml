@@ -4,7 +4,7 @@
     <string name="cur_loaction">현재 위치</string>
     <string name="start">START</string>
     <string name="setting">SETTING</string>
-    <string name="step_guide">보폭을 입력하세요</string>
-    <string name="ok">확인</string>
+    <string name="step_guide">보폭 입력</string>
+    <string name="ok">OK</string>
 
 </resources>

@@ -26,20 +26,22 @@
             android:configChanges="orientation|keyboardHidden|locale|screenSize|fontScale|screenLayout"
             android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".ui.SettingActivity"
-            android:configChanges="orientation|keyboardHidden|locale|screenSize|fontScale|screenLayout"
-            android:screenOrientation="portrait"></activity>
-
         <service android:name=".service.SensorService" android:enabled="true">
             <intent-filter>
-                <action android:name="app.manbo.Service"></action>
+                <action android:name="pedometerapp.sersor.service"></action>
             </intent-filter>
+        </service>
+
+        <service
+            android:name=".service.MiniModeService"
+            android:enabled="true" android:exported="false">
         </service>
 
     </application>
 
     <uses-sdk android:targetSdkVersion="23"></uses-sdk>
 
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
