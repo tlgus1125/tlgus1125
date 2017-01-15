@@ -7,8 +7,8 @@ import android.widget.ListView;
 
 import com.tlgus1125.pedometerapp.R;
 import com.tlgus1125.pedometerapp.baseinfomation.StepInfo;
-import com.tlgus1125.pedometerapp.database.DataBases;
-import com.tlgus1125.pedometerapp.database.DbOpenHelper;
+import com.tlgus1125.pedometerapp.database.DataBaseUtil;
+import com.tlgus1125.pedometerapp.database.PedometerDataBase;
 import com.tlgus1125.pedometerapp.listadapter.CustomAdapter;
 
 import java.util.ArrayList;
@@ -23,8 +23,8 @@ public class StepRecordActivity extends Activity{
     private ListView mListView = null;
     private StepInfo mWalkInfo = null;
 
-    //DataBases
-    private DbOpenHelper mDbOpenHelper;
+    //DataBaseUtil
+    private PedometerDataBase mPedometerDataBase;
     private Cursor mCursor;
 
     @Override
@@ -35,8 +35,8 @@ public class StepRecordActivity extends Activity{
 
     @Override
     protected void onResume() {
-        mDbOpenHelper = DbOpenHelper.getDBHelper(this);
-        mDbOpenHelper.open();
+        mPedometerDataBase = PedometerDataBase.getDBHelper(this);
+        mPedometerDataBase.open();
         mList = new ArrayList<StepInfo>();
         doWhileCursorToArray();
         mListView = (ListView) findViewById(R.id.list);
@@ -48,15 +48,15 @@ public class StepRecordActivity extends Activity{
     private void doWhileCursorToArray(){
 
         mCursor = null;
-        mCursor = mDbOpenHelper.getAllColumns();
+        mCursor = mPedometerDataBase.getAllColumns();
 
         if(mCursor != null) {
             while (mCursor.moveToNext()) {
 
                 mWalkInfo = new StepInfo(
-                        mCursor.getString(mCursor.getColumnIndex(DataBases.CreateDB.DAY)),
-                        mCursor.getString(mCursor.getColumnIndex(DataBases.CreateDB.STEPCOUNT)),
-                        mCursor.getString(mCursor.getColumnIndex(DataBases.CreateDB.DISTANCE))
+                        mCursor.getString(mCursor.getColumnIndex(DataBaseUtil.CreateDB.DAY)),
+                        mCursor.getString(mCursor.getColumnIndex(DataBaseUtil.CreateDB.STEPCOUNT)),
+                        mCursor.getString(mCursor.getColumnIndex(DataBaseUtil.CreateDB.DISTANCE))
                 );
 
                 mList.add(mWalkInfo);
@@ -68,8 +68,8 @@ public class StepRecordActivity extends Activity{
 
     @Override
     protected void onDestroy() {
-        if(mDbOpenHelper != null)
-            mDbOpenHelper.close();
+        if(mPedometerDataBase != null)
+            mPedometerDataBase.close();
         super.onDestroy();
     }
 }

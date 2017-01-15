@@ -37,6 +37,10 @@
             android:enabled="true" android:exported="false">
         </service>
 
+        <provider
+            android:authorities="com.tlgus1125.pedometerapp"
+            android:name=".contentprovider.PedometerContentProvider"
+            android:exported="true"></provider>
     </application>
 
     <uses-sdk android:targetSdkVersion="23"></uses-sdk>

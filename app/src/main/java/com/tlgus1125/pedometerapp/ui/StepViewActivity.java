@@ -19,8 +19,8 @@ import android.widget.TextView;
 import com.tlgus1125.pedometerapp.R;
 import com.tlgus1125.pedometerapp.baseinfomation.StepCount;
 import com.tlgus1125.pedometerapp.baseinfomation.Utils;
-import com.tlgus1125.pedometerapp.database.DataBases;
-import com.tlgus1125.pedometerapp.database.DbOpenHelper;
+import com.tlgus1125.pedometerapp.database.DataBaseUtil;
+import com.tlgus1125.pedometerapp.database.PedometerDataBase;
 import com.tlgus1125.pedometerapp.location.MyLocation;
 import com.tlgus1125.pedometerapp.service.SensorService;
 
@@ -47,7 +47,7 @@ public class StepViewActivity extends Activity {
     private String mServiceData = null;
 
     //DB
-    private DbOpenHelper mDbOpenHelper;
+    private PedometerDataBase mPedometerDataBase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,30 +119,30 @@ public class StepViewActivity extends Activity {
     }
 
     public void updateDataBase(){
-        mDbOpenHelper = DbOpenHelper.getDBHelper(this);
-        mDbOpenHelper.open();
+        mPedometerDataBase = PedometerDataBase.getDBHelper(this);
+        mPedometerDataBase.open();
         String cur_date = getCurrentDate();
-        Cursor cursor = mDbOpenHelper.getMatchDay(cur_date);
+        Cursor cursor = mPedometerDataBase.getMatchDay(cur_date);
         if(!mServiceData.equals("0")) {
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToNext();
-                String day = cursor.getString(cursor.getColumnIndex(DataBases.CreateDB.DAY));
-                String walkcount = cursor.getString(cursor.getColumnIndex(DataBases.CreateDB.STEPCOUNT));
-                String distance = cursor.getString(cursor.getColumnIndex(DataBases.CreateDB.DISTANCE));
+                String day = cursor.getString(cursor.getColumnIndex(DataBaseUtil.CreateDB.DAY));
+                String walkcount = cursor.getString(cursor.getColumnIndex(DataBaseUtil.CreateDB.STEPCOUNT));
+                String distance = cursor.getString(cursor.getColumnIndex(DataBaseUtil.CreateDB.DISTANCE));
                 double distanceValue = Double.parseDouble(String.format("%.2f",Double.parseDouble(distance) + Integer.parseInt(mServiceData) * StepCount.StrideValue));
-                mDbOpenHelper.updateColumn(day, String.valueOf(Integer.parseInt(walkcount) + Integer.parseInt(mServiceData)),
+                mPedometerDataBase.updateColumn(day, String.valueOf(Integer.parseInt(walkcount) + Integer.parseInt(mServiceData)),
                         String.valueOf(distanceValue));
             } else {
                 double distanceValue = Double.parseDouble(String.format("%.2f",Integer.parseInt(mServiceData) * StepCount.StrideValue));
-                mDbOpenHelper.insertColumn(cur_date, mServiceData, String.valueOf(distanceValue));
+                mPedometerDataBase.insertColumn(cur_date, mServiceData, String.valueOf(distanceValue));
             }
         }
     }
 
     @Override
     protected void onDestroy() {
-        if(mDbOpenHelper != null)
-            mDbOpenHelper.close();
+        if(mPedometerDataBase != null)
+            mPedometerDataBase.close();
         super.onDestroy();
     }
 
