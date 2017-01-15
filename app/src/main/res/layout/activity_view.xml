@@ -49,6 +49,7 @@
             android:layout_height="wrap_content"
             android:text="@string/cur_loaction"
             android:textSize="@dimen/text_small_size"
+            android:layout_gravity="center"
             />
         <TextView
             android:layout_width="wrap_content"

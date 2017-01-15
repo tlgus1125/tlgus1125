@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -158,7 +159,7 @@ public class StepViewActivity extends Activity {
 
     public void startSensor(){
         mServiceBtn.setText("STOP");
-
+        mServiceBtn.setBackgroundColor(Color.GRAY);
         try {
             StepCount.isSensorServiceRun = true;
             IntentFilter mainFilter = new IntentFilter("com.tlgus1125.pedometerapp");
@@ -171,7 +172,7 @@ public class StepViewActivity extends Activity {
 
     public void stopSensor(){
         mServiceBtn.setText("START");
-
+        mServiceBtn.setBackgroundColor(Color.RED);
         try {
             StepCount.isSensorServiceRun = false;
             unregisterReceiver(mReceiver);
