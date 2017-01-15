@@ -41,7 +41,6 @@ public class StepViewActivity extends Activity {
     private Button mServiceBtn = null;
     private Intent mSensorServiceIntent = null;
     private BroadcastReceiver mReceiver = null;
-    private boolean flag = true;
     private TextView mStepCountText = null;
     private TextView mDistanceText = null;
     private String mServiceData = null;
@@ -83,11 +82,7 @@ public class StepViewActivity extends Activity {
 
         mReceiver = new SensorReceiver();
         mStepCountText = (TextView) findViewById(R.id.stepCount);
-        if(mStepCountText != null)
-            mStepCountText.setText(String.valueOf(StepCount.Step));
         mDistanceText = (TextView) findViewById(R.id.distance);
-        if(mDistanceText != null)
-            mDistanceText.setText(String.valueOf(StepCount.Distance));
 
         mServiceBtn = (Button) findViewById(R.id.btn_start);
         if(mServiceBtn != null) {
@@ -96,21 +91,26 @@ public class StepViewActivity extends Activity {
                 @Override
                 public void onClick(View v) {
 
-                    if (flag) {
+                    if (StepCount.isSensorServiceRun == false) {
                         startSensor();
                     } else {
                         stopSensor();
                     }
-                    flag = !flag;
                 }
             });
         }
-
         SharedPreferences pref = getSharedPreferences("pedometer", MODE_PRIVATE);
-        flag = pref.getBoolean("isStart", true);
-        if (!flag) {
+
+        if(mStepCountText != null)
+            mStepCountText.setText(String.valueOf(pref.getInt(Utils.SP_STEPCOUNT,0)));
+
+        if(mDistanceText != null)
+            mDistanceText.setText(String.valueOf(pref.getFloat(Utils.SP_DISTANCE,0)));
+
+        if(pref.getBoolean(Utils.SP_SENSORSERVICE, false) == true)
             startSensor();
-        }
+        else
+            stopSensor();
     }
 
     public void startSetting(){
@@ -146,11 +146,13 @@ public class StepViewActivity extends Activity {
     }
 
     @Override
+    protected void onResume() {
+
+        super.onResume();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
-        SharedPreferences pref = getSharedPreferences("pedometer", MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putBoolean("isStart", flag);
-        editor.commit();
         super.onSaveInstanceState(outState);
     }
 
@@ -158,6 +160,7 @@ public class StepViewActivity extends Activity {
         mServiceBtn.setText("STOP");
 
         try {
+            StepCount.isSensorServiceRun = true;
             IntentFilter mainFilter = new IntentFilter("com.tlgus1125.pedometerapp");
             registerReceiver(mReceiver, mainFilter);
             startService(mSensorServiceIntent);
@@ -170,6 +173,7 @@ public class StepViewActivity extends Activity {
         mServiceBtn.setText("START");
 
         try {
+            StepCount.isSensorServiceRun = false;
             unregisterReceiver(mReceiver);
             stopService(mSensorServiceIntent);
             updateDataBase();

@@ -12,6 +12,7 @@ import android.widget.TabHost;
 
 import com.tlgus1125.pedometerapp.R;
 import com.tlgus1125.pedometerapp.baseinfomation.StepCount;
+import com.tlgus1125.pedometerapp.baseinfomation.Utils;
 import com.tlgus1125.pedometerapp.location.MyLocation;
 import com.tlgus1125.pedometerapp.service.MiniModeService;
 
@@ -21,37 +22,48 @@ public class MainActivity extends ActivityGroup {
     private final static String TAB2 = "만보기 기록";
     private MyLocation mLocation = null;
     private final static int GPSPERMISSION = 100;
-
+    private static boolean mbUsePermission = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mbUsePermission = true;
         initTabLayout();
         SharedPreferences pref = getSharedPreferences("pedometer", MODE_PRIVATE);
-        StepCount.Step = pref.getInt("step_count", 0);
-        StepCount.Distance = pref.getFloat("distance", 0);
+        StepCount.Step = pref.getInt(Utils.SP_STEPCOUNT, 0);
+        StepCount.Distance = pref.getFloat(Utils.SP_DISTANCE, 0);
+        StepCount.isSensorServiceRun = pref.getBoolean(Utils.SP_SENSORSERVICE, false);
         mLocation = MyLocation.getInstance();
         mLocation.initMyLocation(this);
-        checkPermission();
     }
 
     @Override
     protected void onPause() {
+        if(StepCount.isSensorServiceRun == true)
+            startService(new Intent(this, MiniModeService.class));
         super.onPause();
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        if(hasFocus){
-            stopService(new Intent(this, MiniModeService.class));
-        }else{
-            startService(new Intent(this, MiniModeService.class));
-        }
-        super.onWindowFocusChanged(hasFocus);
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
     protected void onResume() {
+        stopService(new Intent(this, MiniModeService.class));
+        if(mbUsePermission != false)
+            checkPermission();
         super.onResume();
     }
 
@@ -67,8 +79,9 @@ public class MainActivity extends ActivityGroup {
     protected void onSaveInstanceState(Bundle outState) {
         SharedPreferences pref = getSharedPreferences("pedometer", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putInt("step_count", StepCount.Step);
-        editor.putFloat("distance", Float.parseFloat(String.valueOf(StepCount.Distance)));
+        editor.putInt(Utils.SP_STEPCOUNT, StepCount.Step);
+        editor.putFloat(Utils.SP_DISTANCE, Float.parseFloat(String.valueOf(StepCount.Distance)));
+        editor.putBoolean(Utils.SP_SENSORSERVICE, StepCount.isSensorServiceRun);
         editor.commit();
         super.onSaveInstanceState(outState);
     }
@@ -106,6 +119,9 @@ public class MainActivity extends ActivityGroup {
                             if(mLocation != null) {
                                 mLocation.setRequestLocation();
                             }
+                        }
+                        else{
+                            mbUsePermission = false;
                         }
                     }
             }

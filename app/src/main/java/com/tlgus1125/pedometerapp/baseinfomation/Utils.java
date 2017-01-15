@@ -5,7 +5,9 @@ package com.tlgus1125.pedometerapp.baseinfomation;
  */
 
 public class Utils {
-
+    public static String SP_STEPCOUNT = "step_count";
+    public static String SP_DISTANCE = "distance";
+    public static String SP_SENSORSERVICE = "sensorservice";
     public static double getDistanceValue(String strCount){
         int stepCount = Integer.parseInt(strCount);
         double distance = StepCount.StrideValue * stepCount;
