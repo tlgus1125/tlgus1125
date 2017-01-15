@@ -12,6 +12,7 @@ import java.net.URL;
  * Created by tlgus1125 on 2017-01-13.
  */
 
+//naver map API 사용 하여 현재 위치 get
 public class NaverMapAPI {
     String clientId = "2DvgPUKo22YS_N7fxlw6";//애플리케이션 클라이언트 아이디값";
     String clientSecret = "7BjkVl9vib";//애플리케이션 클라이언트 시크릿값";

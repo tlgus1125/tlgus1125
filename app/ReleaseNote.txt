@@ -1,0 +1,60 @@
+**Release Note**
+
+Package baseinformation
+> StepCount Class : 스텝 수, 거리, 보폭, 센서 동작 유무 관리
+> StepInfo Class : 리스트 뷰에 저장 할 걸음 정보 관련 class
+> Utils Class : 프로젝트 내에서 전반적으로 쓰일 static 변수 및 함수
+
+Package contentprovider
+> PedometerContentProvider Class : 걸음정보 ContentProvider
+
+Package database
+> DatabaseHelper Class : 걸음정보 DB 객체 생성 및 업그레이드
+> DataBaseUtil Class : DB 생성 쿼리 및 column 값 선언
+> PedometerDataBase Class : DB insert, update, select 수행
+
+Package listadapter
+> CustomAdapter Class : 걸음정보 DB 를 화면에 보여주기 위한 list view 관리
+
+Package location
+> NaverMapAPI Class : naver map API 사용 하여 현재 위치 get
+> MyLocation Class : 현재 위치를 경도, 위도로 알아 내고 textview 에 설정
+
+Package service
+> MiniModeService Class : 미니모드 지원 하기 위한 service
+> SensorService Class : 센서 감지 지원 하기 위한 service
+
+Package ui
+> MainActivity Class : 최초 Activity 로 만보기 정보, 기록 화면을 tab 으로 구성 시킴
+> StepRecordActivity Class : 일별 기록 정보 (날짜, 걸음 수, 거리) 를 사용자에게 표시
+> StepViewActivity Class : 만보기 정보 (걸음 수, 거리, 주소 등) 를 사용자에게 표시
+
+
+요구사항
+
+만보기 미니 모드 제공
+> Service 를 사용하여 window 최상단 뷰에 미니 모드를 붙여 제공 함.
+
+만보기 미니 모드 Drag & Drop
+> 미니 모드 뷰에 터치 이벤트를 통하여 지원.
+
+만보기 미니모드는 App 의 Ui 가 hidden 일 경우 노출
+> MainActivity 의 onPause 시점에 서비스 호출, onResume 시점에 서비스 종료.
+
+Runtime Permission 관리
+> 앱 실행 시 위치 정보 API 사용 하기 위한 퍼미션을 사용자에게 요구 하도록 함.
+
+Android System 에 의해 App이 강제 종료 되는 경우 대비
+> Shared Preference 를 통해 진행 중이던 상태 복구 하도록 함.
+
+만보기 기록 정보는 일단위로 저장
+> 만보기 기록 start/stop 시 현재 날짜를 기준으로 DB 저장 및 업데이트 함.
+
+현재 위치 정보는 Reverse Geocoding API 활용
+> naver map API 사용.
+
+Low 메모리 상태에 미니모드 사라지는 일이 없도록 하자
+> 미니모드 서비스 생성 시 Foreground 에서 실행 되도록 옵션 추가.
+
+Database 사용시 Content Provider 를 사용하여 다른 App 에서 Data 조회 할 수 있도록 하자
+> Content Provider 로 데이터 사용 하도록 함.

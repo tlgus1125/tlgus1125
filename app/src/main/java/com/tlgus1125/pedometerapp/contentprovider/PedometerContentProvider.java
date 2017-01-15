@@ -16,6 +16,7 @@ import com.tlgus1125.pedometerapp.database.DatabaseHelper;
  * Created by tlgus1125 on 2017-01-15.
  */
 
+//걸음정보 ContentProvider
 public class PedometerContentProvider extends ContentProvider {
     private SQLiteDatabase mDB = null;
     private Uri contentUri = Uri.parse("com.tlgus1125.pedometerapp");

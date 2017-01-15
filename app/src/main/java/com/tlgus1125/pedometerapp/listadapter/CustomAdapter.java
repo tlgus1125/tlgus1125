@@ -15,6 +15,7 @@ import com.tlgus1125.pedometerapp.R;
  * Created by tlgus1125 on 2017-01-13.
  */
 
+//걸음정보 DB 를 화면에 보여주기 위한 list view 관리
 public class CustomAdapter extends BaseAdapter{
     private LayoutInflater mInflater;
     private ArrayList<StepInfo> mList;

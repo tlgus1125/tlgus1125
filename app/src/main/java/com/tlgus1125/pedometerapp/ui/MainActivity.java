@@ -16,6 +16,7 @@ import com.tlgus1125.pedometerapp.baseinfomation.Utils;
 import com.tlgus1125.pedometerapp.location.MyLocation;
 import com.tlgus1125.pedometerapp.service.MiniModeService;
 
+//최초 Activity 로 만보기 정보, 기록 화면을 tab 으로 구성 시킴
 public class MainActivity extends ActivityGroup {
     private TabHost mTabHost = null;
     private final static String TAB1 = "만보기 화면";

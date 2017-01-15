@@ -31,6 +31,8 @@ import java.util.Locale;
 /**
  * Created by tlgus1125 on 2017-01-13.
  */
+
+//만보기 정보 (걸음 수, 거리, 주소 등) 를 사용자에게 표시
 public class StepViewActivity extends Activity {
 
     private Button mOkBtn = null;

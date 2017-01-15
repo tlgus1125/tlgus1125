@@ -9,6 +9,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.tlgus1125.pedometerapp.baseinfomation.StepCount;
 
@@ -16,6 +17,7 @@ import com.tlgus1125.pedometerapp.baseinfomation.StepCount;
  * Created by tlgus1125 on 2017-01-13.
  */
 
+//센서 감지 지원 하기 위한 service
 public class SensorService extends Service implements SensorEventListener{
 
     int count = StepCount.Step;
@@ -32,7 +34,7 @@ public class SensorService extends Service implements SensorEventListener{
     private float lastZ;
 
     private float x, y, z;
-    private static final int SHAKE_THRESHOLD = 800;
+    private static final int SHAKE_THRESHOLD = 100;
 
     private static final int DATA_X = SensorManager.DATA_X;
     private static final int DATA_Y = SensorManager.DATA_Y;
@@ -53,8 +55,7 @@ public class SensorService extends Service implements SensorEventListener{
         super.onCreate();
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        accelerormeterSensor = sensorManager
-                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        accelerormeterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         startForeground(1, new Notification());
     }
@@ -91,15 +92,14 @@ public class SensorService extends Service implements SensorEventListener{
             long currentTime = System.currentTimeMillis();
             long gabOfTime = (currentTime - lastTime);
 
-            if (gabOfTime > 100) {
+            if (gabOfTime > 400) {
                 lastTime = currentTime;
 
                 x = event.values[SensorManager.DATA_X];
                 y = event.values[SensorManager.DATA_Y];
                 z = event.values[SensorManager.DATA_Z];
 
-                speed = Math.abs(x + y + z - lastX - lastY - lastZ) / gabOfTime
-                        * 10000;
+                speed = Math.abs(x + y + z - lastX - lastY - lastZ) / gabOfTime * 20000;
 
                 if (speed > SHAKE_THRESHOLD) {
                     Intent myFilteredResponse = new Intent("com.tlgus1125.pedometerapp");
@@ -117,6 +117,5 @@ public class SensorService extends Service implements SensorEventListener{
                 lastZ = event.values[DATA_Z];
             }
         }
-
     }
 }

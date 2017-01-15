@@ -10,12 +10,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.widget.TextView;
 
 /**
  * Created by tlgus1125 on 2017-01-13.
  */
 
+//현재 위치를 경도, 위도로 알아 내고 textview 에 설정
 public class MyLocation {
 
     private NaverMapAPI mNaverMapAPIAPI = null;
@@ -50,12 +52,12 @@ public class MyLocation {
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
     }
 
+
     public void initLocationManager(){
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(final Location location) {
-
                 if (location != null)
                     setLocation(location.getLatitude(), location.getLongitude());
             }

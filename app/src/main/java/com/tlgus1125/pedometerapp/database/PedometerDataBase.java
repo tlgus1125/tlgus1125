@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
  * Created by tlgus1125 on 2017-01-13.
  */
 
+//DB insert, update, select 수행
 public class PedometerDataBase {
 
     public static String DATABASE_NAME = "walkcount.db";

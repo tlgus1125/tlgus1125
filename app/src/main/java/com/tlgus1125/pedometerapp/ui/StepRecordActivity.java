@@ -16,6 +16,8 @@ import java.util.ArrayList;
 /**
  * Created by tlgus1125 on 2017-01-13.
  */
+
+//일별 기록 정보 (날짜, 걸음 수, 거리) 를 사용자에게 표시
 public class StepRecordActivity extends Activity{
 
     private ArrayList<StepInfo> mList = null;

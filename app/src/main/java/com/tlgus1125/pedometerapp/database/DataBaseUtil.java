@@ -4,6 +4,7 @@ package com.tlgus1125.pedometerapp.database;
  * Created by tlgus1125 on 2017-01-13.
  */
 
+//DB 생성 쿼리 및 column 값 선언
 public class DataBaseUtil {
     public static final class CreateDB{
         public static final String DAY = "day";

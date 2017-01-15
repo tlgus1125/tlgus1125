@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by tlgus1125 on 2017-01-15.
  */
 
+//걸음정보 DB 객체 생성 및 업그레이드
 public class DatabaseHelper extends SQLiteOpenHelper {
     public DatabaseHelper(Context context){
         super(context, PedometerDataBase.DATABASE_NAME, null, 1);

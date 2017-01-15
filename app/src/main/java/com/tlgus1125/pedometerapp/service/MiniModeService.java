@@ -24,6 +24,7 @@ import com.tlgus1125.pedometerapp.baseinfomation.Utils;
  * Created by tlgus1125 on 2017-01-14.
  */
 
+//미니모드 지원 하기 위한 service
 public class MiniModeService extends Service{
 
     private TextView mMiniStepCount = null;
